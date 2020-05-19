@@ -38,6 +38,7 @@ int main() {
     printf("ip address is %s\n",inet_ntoa(*in));
 
     while (1) {
+      printf("say something: ");
       scanf("%s",buffer );
       send(sockfd,buffer, 1024, 0);
       receive = recv(sockfd, buffer, 1024, 0);

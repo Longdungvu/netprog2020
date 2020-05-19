@@ -47,7 +47,8 @@ int main() {
   while (1) {
     receive = recv(clientfd, buffer, 1024, 0);
     printf("%s\n",buffer );
-    printf("say something: "); scanf("%s",buffer );
+    printf("say something: ");
+    scanf("%s",buffer );
     send(clientfd,buffer, 1024, 0);
     }
   }
