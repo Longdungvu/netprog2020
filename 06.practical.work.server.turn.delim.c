@@ -11,7 +11,7 @@
 
 int isDelimiter(char* x) {
   for (int i = 0; i < strlen(x); i++) {
-    if (x[i] == '\n') {
+    if (x[i] == ' ') {
       return 1;
     }
   }
@@ -21,11 +21,13 @@ int isDelimiter(char* x) {
 int main() {
   int sockfd, clen , clientfd, receive ;
   char buffer[1024] = {0};
-  char data[1024] = {0};
+  char data[2024] = {0};
+  char apd = ' ';
   struct sockaddr_in saddr, caddr;
   unsigned short port = 1234;
   if ((sockfd = socket (AF_INET, SOCK_STREAM, 0)) < 0) {
     printf("error creating socket\n");
+    exit(0);
   }
 
 
@@ -37,16 +39,19 @@ int main() {
 
   if ((bind(sockfd, (struct sockaddr *) &saddr, sizeof(saddr))) < 0 ) {
     printf("error listening\n");
+    exit(0);
   }
 
 
   if (listen(sockfd, 5) < 0) {
     printf("error listening\n");
+    exit(0);
   }
 
   clen=sizeof(caddr);
   if ((clientfd = accept(sockfd, (struct sockaddr*) &caddr, &clen)) < 0) {
     printf("error accepting connection\n");
+    exit(0);
   }
   else{
    printf("connection done\n");
@@ -57,15 +62,29 @@ int main() {
 
 
   while (1) {
+    //receive client messages
+    memset(&buffer, 0 , sizeof(buffer));
+    memset(&data, 0 , sizeof(data));
     while (isDelimiter(buffer) == 0) {
     receive = recv(clientfd, buffer, sizeof(buffer), 0);
-    strncat(data,&buffer,strlen(buffer));
-    printf("%s",buffer);
+    strncat(&data,&buffer,strlen(buffer)); //append to buffer
     }
-    printf("output from client: %s\n",buffer );
-    printf("say something back to client: ");
+    printf("[Client]: %s\n",data );
+    //send messages to client
+    memset(&buffer, 0 , 1024);
+    memset(&data, 0 , 2024);
+    printf("[Server]: ");
     scanf("%s",buffer);
+    strncat(&buffer,&apd,1);
     send(clientfd,buffer, sizeof(buffer), 0);
     }
   }
+
+
+
+
+
+
+
+
 }
