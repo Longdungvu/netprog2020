@@ -10,11 +10,11 @@
 #include <unistd.h>
 
 int isDelimiter(char* x) {
-  for (int i = 0; i < strlen(x); i++) {
-    if (x[i] == ' ') {
+  // for (int i = 0; i < strlen(x); i++) {
+    if (x[strlen(x) - 1] == ' ') {
       return 1;
     }
-  }
+  // }
   return 0;
  }
 
@@ -22,16 +22,16 @@ int main() {
   struct sockaddr_in saddr;
   struct hostent *h;
   int sockfd, receive;
-  unsigned short port = 123;   //443 https default port
+  unsigned short port = 1234;   //443 https default port
   char buffer[1024] = {0};
   char data[2024] = {0};
   char apd = ' ';
   if ((sockfd=socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-    printf("Error creting socket\n");
+    printf("Error creating socket\n");
     exit(0);
   }
 
-  if (( h = gethostbyname("127.0.0.1")) == NULL) {
+  if (( h = gethostbyname("127.0.0.1")) == NULL) { //34.87.72.249
     printf("unknown host\n");
     return -1;
   }
@@ -55,10 +55,10 @@ int main() {
       memset(&buffer, 0 , sizeof(buffer));
       memset(&data, 0 , sizeof(data));
       printf("[Client]: ");
-      scanf("%s",buffer);
+      scanf("%[^\n]%*c",buffer);
       //disconecting out of Server
       if (strcmp(buffer,"/quit") == 0) {
-        printf("disconnecting\n");
+        printf("disconnect from server\n");
         close(sockfd);
         exit(0);
       }
@@ -71,14 +71,13 @@ int main() {
       receive = recv(sockfd, buffer, sizeof(buffer), 0);
       //ACK from Server
       if (receive <= 0) {
-        printf("server disconecting you\n");
+        printf("server disconnect you\n");
         close(sockfd);
         exit(0);
       }
       strncat(data,buffer,strlen(buffer));
       }
-      printf("[Server]: %s",data );
-
+      printf("[Server]: %s\n",data );
 
     }
   }

@@ -11,11 +11,11 @@
 #include <unistd.h>
 
 int isDelimiter(char* x) {
-  for (int i = 0; i < strlen(x); i++) {
-    if (x[i] == ' ') {
+  // for (int i = 0; i < strlen(x); i++) {
+    if (x[strlen(x) - 1] == ' ') {
       return 1;
     }
-  }
+  // }
   return 0;
  }
 
@@ -25,7 +25,7 @@ int main() {
   char data[2024] = {0};
   char apd = ' ';
   struct sockaddr_in saddr, caddr;
-  unsigned short port = 123;
+  unsigned short port = 1234;
   if ((sockfd = socket (AF_INET, SOCK_STREAM, 0)) < 0) {
     printf("error creating socket\n");
     exit(0);
@@ -79,18 +79,18 @@ int main() {
     strncat(data,buffer,strlen(buffer)); //append to buffer
     }
 
-    printf("[Client]: %s",data );
+    printf("[Client]: %s\n",data );
 
     //send messages to client
     memset(buffer, 0 , 1024);
     memset(data, 0 , 2024);
 
     printf("[Server]: ");
-    scanf("%s",buffer);
+    scanf("%[^\n]%*c",buffer);
 
     //disconecting client
     if (strcmp(buffer,"/cd") == 0) {
-      printf("disconecting client\n");
+      printf("disconnect client\n");
       shutdown(clientfd,SHUT_RDWR);
       int count;
       char c;
